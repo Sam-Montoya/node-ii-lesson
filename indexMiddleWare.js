@@ -25,7 +25,29 @@ app.get('/api/stuff', inlineMiddleware, function(req, res, next){
     //this anonymous function is called next
 }) 
 
+function isLoggedIn(request,response,next){
+    if(userIsLoggedIn===true){
+        next();
+    }
+    else {
+        response.redirect('/login')
+    }
+}
+function isAdmin(request,response,next){
+    if(userAdmin===true){
+        next();
+    } else {
+        response.redirect('/notAuth')
+    }
+}
 
+app.get('/api/secretInfos', isLoggedIn, isAdmin, function(request,response,next) {
+    response.json('Secret Infos');
+})
+
+app.get('/api/userInfos', isLoggedIn, function(request,response,next){
+    response.json('user Infos!');
+})
 app.use(bodyParser.json());
 
 app.get('/api/stuff', inlineMiddleware, function(req, res, next){ 
